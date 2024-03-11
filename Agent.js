@@ -21,12 +21,12 @@ app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: f
 //     user: 'postgres',
 //     password: 'Abhi@2001',
 // })
-AWS.config.update({
+AWS.config.update({  
   accessKeyId:  process.env.ACCESS_KEY,
   secretAccessKey:  process.env.SECRET_ACCESS_KEY,
   region:  process.env.BUCKET_REGION,
 });
-
+  
 const s4 = new AWS.S3();
 
 const mysql = require('mysql');
@@ -535,7 +535,13 @@ const deleteBooking = (request, response) => {
           if (error) {
             throw error;
           }
-  
+          pool.query(
+            'UPDATE post SET bookingstatustrack = ? WHERE truckNumber = ?',
+            ['Not Booked', bookingData.truckNumber],
+            (error, postUpdateResult) => {
+                if (error) {
+                    throw error;
+                }
           // Now, move data from the 'post' table to the 'post1' table based on some criteria (e.g., truckNumber)
           pool.query(
             'INSERT INTO post1 SELECT * FROM post WHERE truckNumber = ?',
@@ -547,7 +553,8 @@ const deleteBooking = (request, response) => {
   
               response.status(200).send(`Canceled booking with ID ${id}, truck data moved to post1.`);
             } 
-          );   
+          )
+            });   
         });    
       } else {
         response.status(404).send('Booking data not found for cancellation.');

@@ -119,11 +119,11 @@ const getPostDate=(request,response)=>{
     const {from , to,crn} = request.query;
     console.log(`Fetching data for date range11: from ${from} to ${to}`); // Add a log statement to check query parameters
 
-    pool.query('select truckNumber, date, time, `from`, `to` from booking where  `date` >= ? AND `date` <= ? AND crn = ?',[from,to,crn],(error,results)=>{
+    pool.query('select * from post where  `date` >= ? AND `date` <= ? AND crn = ?',[from,to,crn],(error,results)=>{
         if(error){
             throw error
         }   
-        response.status(200).json(results)
+        response.status(200).json(results)  
 
     })      
 }

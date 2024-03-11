@@ -744,8 +744,9 @@ const createBook = (request, response) => {
         PaymentDate,
         PaymentTime,
         paymentStatus,
+        bookeddate,
     } = request.body  
-    pool.query('insert into booking ( truckNumber, truckWheels, fromSublocation, toSublocation, crn, date,  `from`, time, `to`, fromPincode, toPincode, totalkilometers, totalPrice, name, fromAddress, toAddress,truckMaxWeight,phonenumber,loadweight,type,tbr,agentId,Modeofpayment,InvoiceNumber,PaymentDate,PaymentTime,paymentStatus) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [truckNumber, truckWheels, fromSublocation, toSublocation, crn, date, from, time, to, fromPincode, toPincode, totalkilometers, totalPrice, name, fromAddress, toAddress, truckMaxWeight, phonenumber,loadweight, type,tbr,agentId,Modeofpayment,InvoiceNumber,PaymentDate,PaymentTime,paymentStatus], (error, results) => {
+    pool.query('insert into booking ( truckNumber, truckWheels, fromSublocation, toSublocation, crn, date,  `from`, time, `to`, fromPincode, toPincode, totalkilometers, totalPrice, name, fromAddress, toAddress,truckMaxWeight,phonenumber,loadweight,type,tbr,agentId,Modeofpayment,InvoiceNumber,PaymentDate,PaymentTime,paymentStatus,bookeddate) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [truckNumber, truckWheels, fromSublocation, toSublocation, crn, date, from, time, to, fromPincode, toPincode, totalkilometers, totalPrice, name, fromAddress, toAddress, truckMaxWeight, phonenumber,loadweight, type,tbr,agentId,Modeofpayment,InvoiceNumber,PaymentDate,PaymentTime,paymentStatus,bookeddate], (error, results) => {
         if (error) {  
             throw error  
         }
@@ -912,6 +913,20 @@ const getBooking = (request, response) => {
          
     });           
 };  
+const getinvoice = (request, response) => {
+  const { invoiceNumber, crn } = request.query;
+    pool.query('SELECT * FROM booking WHERE InvoiceNumber = ? AND crn = ?', [invoiceNumber, crn], (error, results) => {
+      if (error) {
+        response.status(500).json({ message: 'Internal server error' });
+      } else {
+        if (results.length === 0) {
+          response.status(404).json({ message: 'No data found' });
+        } else {
+          response.status(200).json(results[0]);
+          console.log(results)
+        }}
+  });           
+};  
 
 const getBooking1 = (request, response) => {
     const { crn } = request.query;
@@ -987,6 +1002,7 @@ module.exports = {
     getTruckById,
     createTruck,  
     updateTruck,
+    getinvoice,
     getTruckNumber1,  
     createDriver, 
     getVerified,         

@@ -322,6 +322,8 @@ app.get('/checkTruckAvailability/:truckNumber', verifyToken, db6.getTruckpostSta
 
 app.post('/addsublocations', verifyToken, db5.createSublocations);
 app.get('/sub', verifyToken, db5.getSub);
+app.get('/invoice', verifyToken, db5.getinvoice);   
+
 app.delete('/deletesublocations', verifyToken, db5.deleteSubLocations);
 app.get('./sublocations/:id', verifyToken, db5.getSubLocationsById);
 app.get('/agentType', verifyToken, db4.getAgentType);
